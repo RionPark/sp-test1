@@ -37,6 +37,10 @@ public class UserInfoServiceImpl implements UserInfoService {
 			return 1;
 		}
 		return 0;
+	}
+	@Override
+	public UserInfo getUserInfo(int uiId) {
+		return userInfoDAO.findUserInfoByUiId(uiId);
 	} 
 
 }

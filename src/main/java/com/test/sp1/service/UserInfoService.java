@@ -10,4 +10,5 @@ public interface UserInfoService {
 	int saveUserInfo(UserInfo userInfo);
 	int updateUserInfo(UserInfo userInfo);
 	int deleteUserInfo(int uiId);
+	UserInfo getUserInfo(int uiId);
 }

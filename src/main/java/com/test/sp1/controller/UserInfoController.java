@@ -2,8 +2,11 @@ package com.test.sp1.controller;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -15,6 +18,8 @@ import com.test.sp1.service.UserInfoService;
 
 @Controller
 public class UserInfoController {
+	private static final Logger log = LoggerFactory.getLogger(UserInfoController.class);
+
 	@Autowired
 	private UserInfoService userService;
 
@@ -29,9 +34,20 @@ public class UserInfoController {
 		return userService.saveUserInfo(userInfo);
 	}
 	
+	@RequestMapping(value="/user/delete", method=RequestMethod.POST)
+	public @ResponseBody Integer deleteUser(@RequestBody UserInfo userInfo) {
+		return userService.deleteUserInfo(userInfo.getUiNum());
+	}
+	
+	@RequestMapping(value="/user/update", method=RequestMethod.POST)
+	public @ResponseBody Integer updateUser(@RequestBody UserInfo userInfo) {
+		log.debug("유저정보=>{}",userInfo);
+		return userService.updateUserInfo(userInfo);
+	}
+	
 	@RequestMapping(value="/user", method=RequestMethod.GET)
 	public @ResponseBody UserInfo getUserInfo(@RequestParam int uiNum) {
-		System.out.println("uiNum=" + uiNum);
-		return null;
+		log.debug("uiNum=" + uiNum);
+		return userService.getUserInfo(uiNum);
 	}
 }

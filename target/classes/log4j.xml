@@ -10,12 +10,9 @@
 		</layout>
 	</appender>
 	
-	<logger name="test">
-		<level value="info" />
-	</logger>
 	<!-- Application Loggers -->
 	<logger name="com.test.sp1">
-		<level value="info" />
+		<level value="debug" />
 	</logger>
 	
 	<!-- 3rdparty Loggers -->
