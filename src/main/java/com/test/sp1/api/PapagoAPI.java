@@ -1,12 +1,12 @@
 package com.test.sp1.api;
 
 import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.List;
 
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.JsonMappingException;
@@ -16,26 +16,29 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.test.sp1.entity.Item;
 import com.test.sp1.entity.Result;
+import com.test.sp1.entity.papago.PaPagoParam;
+import com.test.sp1.entity.papago.PaPagoResult;
 
 @Component
-public class MovieAPI {
+public class PapagoAPI {
 	
-	private static final Logger log = LoggerFactory.getLogger(MovieAPI.class);
+	private static final Logger log = LoggerFactory.getLogger(PapagoAPI.class);
 	
-	private final static String API_URI = "http://api.kcisa.kr/openapi/service/rest/convergence2017/conver3";
-	private final static String KEY_NAME = "serviceKey";
-	private final static String SERVICE_KEY = "acf4f9b4-a6a2-44ed-b5c4-0a467dba1820";
+	private final static String API_URI = "https://openapi.naver.com/v1/papago/n2mt";
+	private final static String ID_HEADER = "X-Naver-Client-Id";
+	private final static String CLIENT_ID = "VWZqthWACZAKQbfVjAqA";
+	private final static String SECRET_HEADER = "X-Naver-Client-Secret";
+	private final static String CLIENT_SECRET = "plX7moPoun";
 	
 	@Autowired
 	private ObjectMapper om;
 	
-	public Result getResult() {
-		String json = getSourceString();
-		Result result = null;
+	public PaPagoResult getResult(PaPagoParam pp) {
+		String json = getSourceString(pp);
+		PaPagoResult result = null;
 		try {
-			result = om.readValue(json, Result.class);
+			result = om.readValue(json, PaPagoResult.class);
 		} catch (JsonParseException e) {
 			e.printStackTrace();
 		} catch (JsonMappingException e) {
@@ -46,10 +49,9 @@ public class MovieAPI {
 		return result;
 	}
 	public HttpURLConnection getHttpURLConnection() {
-		String uri = API_URI + "?" + KEY_NAME + "=" + SERVICE_KEY;
 		HttpURLConnection conn = null;
 		try {
-			URL url = new URL(uri);
+			URL url = new URL(API_URI);
 			conn = (HttpURLConnection) url.openConnection();
 			return conn;
 		} catch (MalformedURLException e) {
@@ -59,13 +61,23 @@ public class MovieAPI {
 		}
 		return null;
 	}
-	public String getSourceString() {
+	public String getSourceString(PaPagoParam pp) {
 		HttpURLConnection conn = null;
 		try {
 			conn = getHttpURLConnection();
-			conn.setRequestMethod("GET");
-			conn.setRequestProperty("accept", "application/json;charset=UTF-8");
+			conn.setRequestMethod("POST");
+			conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+			conn.setRequestProperty(ID_HEADER, CLIENT_ID);
+			conn.setRequestProperty(SECRET_HEADER, CLIENT_SECRET);
 			conn.setDoOutput(true);
+			DataOutputStream dos = new DataOutputStream(conn.getOutputStream());
+			String param="source=" + pp.getSource()
+					+ "&target=" + pp.getTarget()
+					+ "&text=" + pp.getText()
+					+ "&honorific=" + pp.isHonorific();
+			dos.write(param.getBytes("UTF-8"));
+			dos.flush();
+			dos.close();
 			
 			int status = conn.getResponseCode();
 			
@@ -86,12 +98,4 @@ public class MovieAPI {
 		return "";
 	}
 	
-	public static void main(String[] args) {
-		MovieAPI movieAPI = new MovieAPI();
-		Result result = movieAPI.getResult();
-		List<Item> itemList =result.getResponse().getBody().getItems().getItem();
-		for(Item item : itemList) {
-			System.out.println(item.getTitle());
-		}
-	}
 }
