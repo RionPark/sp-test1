@@ -8,8 +8,11 @@ import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import com.test.sp1.bean.Action;
 
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -32,6 +35,10 @@ public class BeanTest {
 	@Autowired 
 	private Son son;
 	
+	@Autowired
+	@Qualifier("dog")
+	private Action action;
+	
 	@Test
 	public void test() {
 		log.debug("om=>{}",om);
@@ -39,6 +46,7 @@ public class BeanTest {
 		log.debug("ds=>{}",ds);
 		log.debug("father=>{}",father);
 		log.debug("son=>{}",son);
+		action.eat();
 	}
 
 }
