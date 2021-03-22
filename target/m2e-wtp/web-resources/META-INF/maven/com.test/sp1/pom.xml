@@ -167,6 +167,13 @@
 			<artifactId>json</artifactId>
 			<version>20160810</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.springframework/spring-test -->
+		<dependency>
+		    <groupId>org.springframework</groupId>
+		    <artifactId>spring-test</artifactId>
+		    <version>3.1.2.RELEASE</version>
+		    <scope>test</scope>
+		</dependency>
 
 	</dependencies>
 	<build>
