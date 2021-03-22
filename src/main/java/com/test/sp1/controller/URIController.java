@@ -12,5 +12,5 @@ public class URIController {
 	@RequestMapping(value="/views/**",method=RequestMethod.GET)
 	public String goPage(HttpServletRequest request) {
 		return request.getRequestURI().substring(7);
-	}
+	} 
 }

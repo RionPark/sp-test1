@@ -34,7 +34,7 @@ div.middle{
 </div>
 <div class="right-div">
 <select id="target" onchange="check(this)" onfocus="saveTmp(this)">
-</select><lable for="honorific">존댓말</lable><input type="checkbox" id="honorific"><br>
+</select><label for="honorific">존댓말</label><input type="checkbox" id="honorific"><br>
 <textarea id="translatedText"></textarea>
 </div>
 <script>
